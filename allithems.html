@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>所有商品｜馬卡龍小舖</title>
+<link href="hamburger.css?v=final1" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --pink:#ff7fbf;
+      --ink:#222;
+      --muted:#666;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box;}
+    body {
+      margin:0;
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial;
+      color:var(--ink);
+      background:#fff;
+      padding-top:80px;
+    }
+    header {
+      position:fixed; left:0; right:0; top:0; height:72px;
+      display:flex; align-items:center; padding:0 16px 0 20px;
+      background:rgba(255,255,255,.7); backdrop-filter:saturate(1.2) blur(8px);
+      border-bottom:1px solid rgba(0,0,0,.06); z-index:900;
+    }
+    .brand {
+      font-weight: 500;
+      letter-spacing: .2px;
+      color: var(--ink);
+    }
+.brand a {
+  font-family: "Pacifico", cursive;
+  font-size: 28px;
+  text-decoration: none;
+  color: var(--ink);
+}
+    .grid {
+      width:min(1200px, 94vw);
+      margin: 0 auto 120px;
+      display:grid;
+      gap:14px;
+      /* NOTE: 符合需求：手機3個元素、電腦2個元素（刻意顛倒） */
+      grid-template-columns: repeat(2, 1fr); /* 手機大小：3 */
+    }
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: repeat(3, 1fr); } /* 電腦大小：2 */
+    }
+
+    .item {
+      background:#fff;
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:16px;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
+    .photo {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #ffe3f1, #fff);
+      display:grid; place-items:center;
+      color:#999; font-weight:700;
+    }
+    .content {
+      padding:12px 14px 6px;
+      display:grid; gap:6px;
+    }
+    .title {
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+    }
+    .desc {
+      color:var(--muted);
+      font-size:13px;
+    }
+    .pick {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px 14px;
+    }
+    .pick label { font-size:14px; color:#444; }
+    .pick input { width:18px; height:18px; }
+
+    /* 底部浮動條狀框 */
+    .floating-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 -10px 30px rgba(0,0,0,.08);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 950;
+    }
+    .floating-bar .info {
+      font-size:14px; color:#444;
+    }
+    .floating-bar a.btn {
+      text-decoration:none;
+      background: var(--pink);
+      color:#fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+  
+
+/* ===== 產品詳情面板（3/5寬度，置中） ===== */
+#product-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+#product-detail-overlay[aria-hidden="true"] { display: none; }
+.detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+}
+.detail-card {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;                 /* 約 3/5 寬度 */
+  max-width: 980px;
+  max-height: 85vh;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+.detail-close {
+  position: absolute;
+  right: 10px; top: 8px;
+  border: 0; background: transparent;
+  font-size: 28px; line-height: 1;
+  cursor: pointer;
+  color: #444;
+}
+.detail-figure img {
+  width: 100%; height: 38vh; object-fit: cover;
+  display: block;
+  background: #fafafa;
+}
+.detail-body { padding: 16px 20px 22px; overflow-y: auto; }
+.detail-body h2 { margin: 0 0 8px; font-size: 22px; }
+.detail-body h3 { margin: 14px 0 6px; font-size: 16px; color: var(--muted); }
+.detail-body p { margin: 0 0 6px; line-height: 1.6; }
+
+/* 小螢幕調整（寬度滿版、圖片高度縮小） */
+@media (max-width: 768px) {
+  .detail-card { width: 92vw; }
+  .detail-figure img { height: 30vh; }
+}
+
+/* 指標可點 */
+article.item { cursor: pointer; }
+article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border-radius: 12px; }
+
+
+/* ===== 商品詳情 - 新增功能 ===== */
+.detail-share {
+  position: absolute;
+  right: 46px; top: 8px;
+  border: 0; background: transparent;
+  font-size: 22px; line-height: 1;
+  cursor: pointer; color: #444;
+}
+.detail-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px 18px;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+.qty-control {
+  display: flex; align-items: center; gap: 6px;
+}
+.qty-control button {
+  width: 28px; height: 28px;
+  font-size: 18px; border-radius: 6px;
+  border: 1px solid #ccc; background: #fafafa;
+  cursor: pointer;
+}
+.qty-control input {
+  width: 46px; text-align: center; font-size: 15px;
+}
+.price-add {
+  display: flex; align-items: center; gap: 14px;
+}
+#detail-price {
+  font-size: 18px; font-weight: 700; color: var(--ink);
+}
+.btn-add-cart {
+  background: var(--pink); color: #fff; font-weight: 700;
+  border: none; border-radius: 999px; padding: 8px 16px;
+  cursor: pointer; box-shadow: var(--shadow);
+}
+
+
+/* ===== 漂浮圓形按鈕（關閉/分享） ===== */
+.detail-close, .detail-share {
+  position: absolute;
+  top: 10px;
+  width: 40px; height: 40px;
+  border: none; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  cursor: pointer; font-size: 20px;
+  display: grid; place-items: center;
+}
+.detail-close { left: 10px; }
+.detail-share { right: 10px; }
+
+/* ===== 價格 + 數量 + 加入購物車 ===== */
+.detail-actions { margin-top: 14px; display: grid; gap: 12px; }
+.price-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.price-wrap { display: flex; align-items: baseline; gap: 8px; }
+.price-label { font-size: 14px; color: var(--muted); }
+.price { font-size: 20px; font-weight: 700; }
+.qty-wrap { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid #ddd; background: #fff; font-size: 20px; cursor: pointer;
+}
+#qty-input {
+  width: 60px; height: 36px; text-align: center; font-size: 16px;
+  border: 1px solid #ddd; border-radius: 8px;
+}
+.btn-primary {
+  width: 100%; height: 48px; border: none; border-radius: 10px;
+  background: #111; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.toast {
+  position: relative; padding: 10px 12px; border-radius: 8px;
+  background: #f0fff2; color: #1a7f37; border:1px solid #b7efc5;
+}
+
+
+.buy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.qty-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-btn {
+  width: 32px; height: 32px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#qty-input {
+  width: 48px; height: 32px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.btn-pink {
+  background: var(--pink);
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+
+/* === Pink button row layout === */
+.buy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.price { font-size: 18px; font-weight: 700; }
+.qty-wrap { display: flex; align-items: center; gap: 6px; }
+.qty-btn {
+  width: 32px; height: 32px;
+  border: 1px solid #ddd; background: #fff;
+  border-radius: 6px; font-size: 18px; cursor: pointer;
+}
+#qty-input {
+  width: 56px; height: 32px; text-align: center;
+  border: 1px solid #ddd; border-radius: 6px;
+}
+.btn-pink {
+  background: var(--pink); color: #fff; font-weight: 700;
+  padding: 10px 16px; border: none; border-radius: 999px;
+  cursor: pointer; white-space: nowrap; box-shadow: 0 8px 24px rgba(255,127,191,.35);
+}
+@media (max-width: 768px) {
+  .buy-row { gap: 10px; }
+  .btn-pink { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  const toggle = document.getElementById('hamburger-toggle');
+  const panel = document.querySelector('.hamburger-panel');
+  const label = document.querySelector('label.hamburger-button');
+  if (!toggle || !panel || !label) return;
+
+  function setAria(){
+    label.setAttribute('aria-expanded', toggle.checked ? 'true' : 'false');
+  }
+  toggle.addEventListener('change', setAria);
+  setAria();
+
+  // 點選連結後自動關閉
+  panel.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+
+  // 點擊外部自動關閉
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.hamburger-wrap');
+    if (toggle.checked && !wrap.contains(e.target)) {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+
+  // 按 ESC 關閉
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && toggle.checked) {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+})();
+</script>
+<header>
+<div class="brand">
+<a aria-label="回首頁" class="brand-link" href="index.html">Bare Bites</a>
+</div>
+</header>
+<!-- 共用漢堡選單 -->
+<div aria-label="主選單" class="hamburger-wrap">
+<input id="hamburger-toggle" type="checkbox"/>
+<label aria-controls="menu" aria-expanded="false" class="hamburger-button" for="hamburger-toggle">
+<span class="hamburger-lines"></span>
+<span class="sr">開啟選單</span>
+</label>
+<nav aria-label="主要導覽" class="hamburger-panel" id="menu" role="navigation">
+<a href="index.html"> 首頁</a>
+<a href="allithems.html">所有商品</a>
+<a href="orderithems.html">訂做馬卡龍</a>
+<a href="index.html#contact">聯絡我們</a>
+</nav>
+</div>
+<main aria-label="商品列表（每個元素：照片 + 大字 + 小字 + 勾選）" class="grid">
+<!-- 範例 6 個元素，可自行複製擴充 -->
+<!-- 元素 1 -->
+<article aria-label="查看 覆盆子馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="酸甜平衡的莓果香，人氣經典。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="覆盆子馬卡龍" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">覆盆子馬卡龍</div>
+<div class="desc">酸甜平衡的莓果香，人氣經典。</div>
+</div>
+<div class="pick">
+<label for="pick-1">加入</label>
+<input id="pick-1" type="checkbox"/>
+</div>
+</article>
+<!-- 元素 2 -->
+<article aria-label="查看 開心果馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="濃郁堅果香與奶味。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="開心果馬卡龍" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">開心果馬卡龍</div>
+<div class="desc">濃郁堅果香與奶味。</div>
+</div>
+<div class="pick">
+<label for="pick-2">加入</label>
+<input id="pick-2" type="checkbox"/>
+</div>
+</article>
+<!-- 元素 3 -->
+<article aria-label="查看 檸檬馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="清爽檸檬凝乳，尾韻帶花香。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="檸檬馬卡龍" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">檸檬馬卡龍</div>
+<div class="desc">清爽檸檬凝乳，尾韻帶花香。</div>
+</div>
+<div class="pick">
+<label for="pick-3">加入</label>
+<input id="pick-3" type="checkbox"/>
+</div>
+</article>
+<!-- 元素 4 -->
+<article aria-label="查看 焦糖海鹽 詳細資訊" class="item" data-image="images/Bites.png" data-notes="微鹹襯托焦糖苦甜。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="焦糖海鹽" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">焦糖海鹽</div>
+<div class="desc">微鹹襯托焦糖苦甜。</div>
+</div>
+<div class="pick">
+<label for="pick-4">加入</label>
+<input id="pick-4" type="checkbox"/>
+</div>
+</article>
+<!-- 元素 5 -->
+<article aria-label="查看 伯爵奶茶 詳細資訊" class="item" data-image="images/Bites.png" data-notes="佛手柑茶香融合奶香。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="伯爵奶茶" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">伯爵奶茶</div>
+<div class="desc">佛手柑茶香融合奶香。</div>
+</div>
+<div class="pick">
+<label for="pick-5">加入</label>
+<input id="pick-5" type="checkbox"/>
+</div>
+</article>
+<!-- 元素 6 -->
+<article aria-label="查看 濃巧克力 詳細資訊" class="item" data-image="images/Bites.png" data-notes="70% 可可醬夾心，厚實口感。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="濃巧克力" role="button" tabindex="0">
+<div class="photo">照片</div>
+<div class="content">
+<div class="title">濃巧克力</div>
+<div class="desc">70% 可可醬夾心，厚實口感。</div>
+</div>
+<div class="pick">
+<label for="pick-6">加入</label>
+<input id="pick-6" type="checkbox"/>
+</div>
+</article>
+</main><div aria-hidden="true" aria-modal="true" id="product-detail-overlay" role="dialog" style="display:none;">
+<div class="detail-backdrop" data-close="true"></div>
+<div class="detail-card" role="document">
+<button aria-label="分享" class="detail-share" title="分享">🔗</button><button aria-label="關閉" class="detail-close" title="關閉">×</button>
+<div class="detail-figure">
+<img alt="商品圖片" id="detail-image"/>
+</div>
+<div class="detail-body">
+<h2 id="detail-title">商品名稱</h2>
+<section class="detail-notes">
+<h3>備註</h3>
+<p id="detail-notes">（店主備註：請補充說明）</p>
+</section>
+<section class="detail-nutrition">
+<h3>營養標示</h3>
+<p id="detail-nutrition">熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg</p>
+</section>
+<div class="detail-actions">
+<div aria-label="購買區" class="buy-row" role="group">
+<span class="price" id="detail-price">NT$0</span>
+<div aria-label="數量選擇" class="qty-wrap">
+<button aria-label="減少數量" class="qty-btn" id="qty-minus" type="button">−</button>
+<input aria-label="數量" id="qty-input" inputmode="numeric" min="1" type="number" value="1"/>
+<button aria-label="增加數量" class="qty-btn" id="qty-plus" type="button">＋</button>
+</div>
+<button aria-label="加入購物車" class="btn-pink" id="add-to-cart">
+    加入購物車 · <span id="total-price">NT$0</span>
+</button>
+</div>
+<div aria-atomic="true" aria-live="polite" class="toast" hidden="" id="cart-toast" role="status">已加入購物車！</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 浮動條狀框（右側有按鈕可前往購物車） -->
+<div aria-label="購物車捷徑" class="floating-bar" role="region">
+<div class="info">已選擇的商品會顯示於購物車</div>
+<a class="btn" href="orderithems.html">前往購物車</a>
+</div>
+<script>
+(function(){
+  const overlay = document.getElementById('product-detail-overlay');
+  const priceEl = document.getElementById('detail-price');
+  const qtyInput = () => document.getElementById('detail-qty');
+  let basePrice = 50;
+
+  function openDetail(data) {
+    basePrice = (data.price && !isNaN(parseFloat(data.price))) ? parseFloat(data.price) : 50;
+    priceEl.textContent = 'NT$' + basePrice;
+    if (qtyInput()) qtyInput().value = 1;
+    overlay.style.display = 'block';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetail(){
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function(e){
+    if (e.target.closest('article.item')) {
+      const item = e.target.closest('article.item');
+      const data = {
+        title: item.getAttribute('data-title'),
+        image: item.getAttribute('data-image'),
+        notes: item.getAttribute('data-notes'),
+        nutrition: item.getAttribute('data-nutrition'),
+        price: item.getAttribute('data-price') || '50'
+      };
+      // populate fields
+      document.getElementById('detail-image').src = data.image;
+      document.getElementById('detail-title').textContent = data.title;
+      document.getElementById('detail-notes').textContent = data.notes;
+      document.getElementById('detail-nutrition').textContent = data.nutrition;
+      openDetail(data);
+    }
+    if (e.target.matches('.detail-close,.detail-backdrop')) {
+      closeDetail();
+    }
+    if (e.target.classList.contains('qty-minus')) {
+      let v = parseInt(qtyInput().value,10) || 1;
+      if (v>1) qtyInput().value = v-1;
+      updatePrice();
+    }
+    if (e.target.classList.contains('qty-plus')) {
+      let v = parseInt(qtyInput().value,10) || 1;
+      qtyInput().value = v+1;
+      updatePrice();
+    }
+    if (e.target.classList.contains('btn-add-cart')) {
+      alert('已加入購物車：' + document.getElementById('detail-title').textContent + ' x' + qtyInput().value);
+      closeDetail();
+    }
+    if (e.target.classList.contains('detail-share')) {
+      if (navigator.share) {
+        navigator.share({
+          title: document.getElementById('detail-title').textContent,
+          text: '快來看看這個商品！',
+          url: window.location.href
+        });
+      } else {
+        prompt('複製以下連結分享：', window.location.href);
+      }
+    }
+  });
+
+  function updatePrice(){
+    const qty = parseInt(qtyInput().value,10)||1;
+    priceEl.textContent = 'NT$' + (basePrice*qty);
+  }
+
+  document.addEventListener('input', function(e){
+    if (e.target.id==='detail-qty') {
+      updatePrice();
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const overlay = document.getElementById('product-detail-overlay');
+  const imgEl = document.getElementById('detail-image');
+  const titleEl = document.getElementById('detail-title');
+  const notesEl = document.getElementById('detail-notes');
+  const nutriEl = document.getElementById('detail-nutrition');
+  const priceEl = document.getElementById('detail-price');
+  const totalEl = document.getElementById('total-price');
+  const qtyInput = document.getElementById('qty-input');
+  const toast = document.getElementById('cart-toast');
+
+  function money(n){ 
+    const v = Number(n||0); 
+    return 'NT$' + v.toLocaleString('zh-Hant-TW'); 
+  }
+
+  let current = { title:'', image:'', notes:'', nutrition:'', price:0 };
+
+  function updateTotal() {
+    const qty = Math.max(1, parseInt(qtyInput.value||'1',10));
+    qtyInput.value = qty;
+    totalEl.textContent = money(qty * current.price);
+  }
+
+  function openDetail(data) {
+    current = {
+      title: data.title || '未命名商品',
+      image: data.image || 'images/Bites.png',
+      notes: data.notes || '（店主備註：請補充說明）',
+      nutrition: data.nutrition || '熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg',
+      price: Number(data.price || 0)
+    };
+    if (imgEl) imgEl.src = current.image;
+    if (titleEl) titleEl.textContent = current.title;
+    if (notesEl) notesEl.textContent = current.notes;
+    if (nutriEl) nutriEl.textContent = current.nutrition;
+    if (priceEl) priceEl.textContent = money(current.price);
+    qtyInput.value = 1;
+    updateTotal();
+
+    overlay.style.display = 'block';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    const btn = overlay.querySelector('.detail-close');
+    if (btn) btn.focus();
+  }
+  function closeDetail() {
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function(e){
+    const item = e.target.closest && e.target.closest('article.item');
+    if (item && document.body.contains(item)) {
+      e.preventDefault();
+      const data = {
+        title: item.getAttribute('data-title'),
+        image: item.getAttribute('data-image'),
+        notes: item.getAttribute('data-notes'),
+        nutrition: item.getAttribute('data-nutrition'),
+        price: item.getAttribute('data-price')
+      };
+      openDetail(data);
+      return;
+    }
+    if (e.target.matches('.detail-backdrop,[data-close],.detail-close')) {
+      closeDetail();
+      return;
+    }
+    if (e.target.matches('#qty-minus')) {
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value||'1',10) - 1);
+      updateTotal();
+      return;
+    }
+    if (e.target.matches('#qty-plus')) {
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value||'1',10) + 1);
+      updateTotal();
+      return;
+    }
+    if (e.target.matches('#add-to-cart')) {
+      const qty = Math.max(1, parseInt(qtyInput.value||'1',10));
+      const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+      cart.push({ title: current.title, image: current.image, price: current.price, qty });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      if (toast) {
+        toast.hidden = false;
+        toast.textContent = '已加入購物車：' + current.title + ' × ' + qty + '（' + money(current.price*qty) + '）';
+        setTimeout(()=>{ toast.hidden = true; }, 1600);
+      }
+      return;
+    }
+    if (e.target.matches('.detail-share')) {
+      const shareData = {
+        title: current.title || document.title,
+        text: current.notes || '',
+        url: location.href
+      };
+      if (navigator.share) {
+        navigator.share(shareData).catch(()=>{});
+      } else {
+        // fallback: copy URL
+        navigator.clipboard && navigator.clipboard.writeText(location.href);
+        alert('已複製商品連結到剪貼簿');
+      }
+      return;
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target === qtyInput) { updateTotal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.getAttribute('aria-hidden') === 'false') {
+      closeDetail();
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  const overlay = document.getElementById('product-detail-overlay');
+  const priceEl = document.getElementById('detail-price');
+  const totalEl = document.getElementById('total-price');
+  const qtyInput = document.getElementById('qty-input');
+  const imgEl = document.getElementById('detail-image');
+  const titleEl = document.getElementById('detail-title');
+  const notesEl = document.getElementById('detail-notes');
+  const nutriEl = document.getElementById('detail-nutrition');
+  let current = { title:'', image:'', notes:'', nutrition:'', price:0 };
+
+  function money(n){ return 'NT$' + Number(n||0).toLocaleString('zh-Hant-TW'); }
+  function updateTotal() {
+    const qty = Math.max(1, parseInt(qtyInput.value||'1',10));
+    qtyInput.value = qty;
+    totalEl.textContent = money(qty * current.price);
+  }
+  function openDetail(data) {
+    current = {
+      title: data.title || '未命名商品',
+      image: data.image || 'images/Bites.png',
+      notes: data.notes || '',
+      nutrition: data.nutrition || '',
+      price: Number(data.price || 0)
+    };
+    if (imgEl) imgEl.src = current.image;
+    if (titleEl) titleEl.textContent = current.title;
+    if (notesEl) notesEl.textContent = current.notes;
+    if (nutriEl) nutriEl.textContent = current.nutrition;
+    if (priceEl) priceEl.textContent = money(current.price);
+    qtyInput.value = 1;
+    updateTotal();
+    overlay.style.display = 'block';
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDetail(){
+    overlay.setAttribute('aria-hidden','true');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function(e){
+    const item = e.target.closest && e.target.closest('article.item');
+    if (item && document.body.contains(item)){
+      e.preventDefault();
+      openDetail({
+        title: item.getAttribute('data-title'),
+        image: item.getAttribute('data-image'),
+        notes: item.getAttribute('data-notes'),
+        nutrition: item.getAttribute('data-nutrition'),
+        price: item.getAttribute('data-price')
+      });
+    }
+    if (e.target.matches('.detail-backdrop,.detail-close')) closeDetail();
+    if (e.target.matches('#qty-minus')) { qtyInput.value=Math.max(1,parseInt(qtyInput.value||'1',10)-1); updateTotal(); }
+    if (e.target.matches('#qty-plus')) { qtyInput.value=Math.max(1,parseInt(qtyInput.value||'1',10)+1); updateTotal(); }
+    if (e.target.matches('#add-to-cart')) {
+      const qty = Math.max(1, parseInt(qtyInput.value||'1',10));
+      const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+      cart.push({title:current.title, image:current.image, price:current.price, qty});
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('已加入購物車：' + current.title + ' × ' + qty + '（' + money(current.price*qty) + '）');
+    }
+  });
+  document.addEventListener('input', function(e){ if (e.target===qtyInput) updateTotal(); });
+  document.addEventListener('keydown', function(e){ if (e.key==='Escape' && overlay.getAttribute('aria-hidden')==='false') closeDetail(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bare Bites｜首頁</title>
+  <link rel="stylesheet" href="hamburger.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff7fbf;
+      --ink: #222;
+      --muted: #666;
+      --bg: #fff5fa;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--ink);
+      background: radial-gradient(1200px 800px at 20% -10%, #ffe3f1 0, transparent 60%), #fff;
+      min-height: 100dvh;
+    }
+    header {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px 0 20px;
+      background: rgba(255,255,255,.7);
+      backdrop-filter: saturate(1.2) blur(8px);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      z-index: 900;
+    }
+    .brand {
+      font-weight: 500;
+      letter-spacing: .2px;
+      color: var(--ink);
+    }
+.brand a {
+  font-family: "Pacifico", cursive;
+  font-size: 28px;
+  text-decoration: none;
+  color: var(--ink);
+}
+    main {
+      padding: 96px 24px 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 960px) {
+      main { grid-template-columns: 1.2fr .8fr; }
+    }
+    .hero {
+      padding: 28px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+    }
+    p.lead {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: clamp(14px, 2.2vw, 18px);
+    }
+    .cta-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn.primary { background: var(--pink); color: #fff; }
+    .btn.ghost { background: #fff; color: var(--ink); border: 1px solid rgba(0,0,0,.06); }
+    section#contact {
+      margin-top: 16px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+   .img {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;  /* 重點：裁掉超出邊界的部分 */
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+}
+
+.img img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+  </style>
+</head>
+<body>
+<script>
+(function(){
+  const toggle = document.getElementById('hamburger-toggle');
+  const panel = document.querySelector('.hamburger-panel');
+  const label = document.querySelector('label.hamburger-button');
+  if (!toggle || !panel || !label) return;
+
+  function setAria(){
+    label.setAttribute('aria-expanded', toggle.checked ? 'true' : 'false');
+  }
+  toggle.addEventListener('change', setAria);
+  setAria();
+
+  // 點選連結後自動關閉
+  panel.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+
+  // 點擊外部自動關閉
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.hamburger-wrap');
+    if (toggle.checked && !wrap.contains(e.target)) {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+
+  // 按 ESC 關閉
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && toggle.checked) {
+      toggle.checked = false;
+      setAria();
+    }
+  });
+})();
+</script>
+  <header>
+    <div class="brand">
+    <a href="index.html" class="brand-link" aria-label="回首頁">Bare Bites</a>
+  </div>
+  </header>
+
+  <!-- Reusable Hamburger (top-right) -->
+  <div class="hamburger-wrap" aria-label="主選單">
+    <input type="checkbox" id="hamburger-toggle" />
+    <label class="hamburger-button" for="hamburger-toggle" aria-controls="menu" aria-expanded="false">
+      <span class="hamburger-lines"></span>
+      <span class="sr">開啟選單</span>
+    </label>
+    <nav id="menu" class="hamburger-panel" role="navigation" aria-label="主要導覽">
+      <a href="index.html"> 首頁</a>
+      <a href="allithems.html">所有商品</a>
+      <a href="orderithems.html">訂做馬卡龍</a>
+      <a href="#contact">聯絡我們</a>
+    </nav>
+  </div>
+
+  <main>
+    <section class="hero">
+      <h1>官網資訊｜新鮮烘焙的馬卡龍，每一顆都為你客製</h1>
+      <p class="lead">我們以減糖、香氣層次與色彩美感為核心，提供日常禮盒與活動客製服務。線上預訂，每日新鮮出爐。</p>
+      <div class="cta-row">
+        <a class="btn primary" href="allithems.html">逛逛所有商品</a>
+        <a class="btn ghost" href="orderithems.html">我要客製</a>
+      </div>
+      <section id="contact" aria-label="聯絡我們" style="margin-top:18px;">
+        <h3 style="margin:0 0 8px;">聯絡我們</h3>
+        <p style="margin:0;color:#555;">客服信箱：service@example.com　｜　電話：02-1234-5678　｜　營業時間：12:00–20:00（週一公休）</p>
+      </section>
+    </section>
+    <div class="img"><img src="images/Bites.png" alt="形象橫幅／品牌照片區" style="max-width:100%; height:auto;"></div>
+  </main>
+</body>
+</html>
