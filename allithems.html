@@ -391,17 +391,19 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <main aria-label="商品列表（每個元素：照片 + 大字 + 小字 + 勾選）" class="grid">
 <!-- 範例 6 個元素，可自行複製擴充 -->
 <!-- 元素 1 -->
-<article aria-label="查看 覆盆子馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="酸甜平衡的莓果香，人氣經典。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="覆盆子馬卡龍" role="button" tabindex="0">
-<div class="photo">照片</div>
-<div class="content">
-<div class="title">梵谷線上展</div>
-<div class="desc">運用HTML製作美術博物館的展覽介紹，並且提供線上展讓因為疫情無法到場的人也可以體驗。</div>
-</div>
-<div class="pick">
-<label for="pick-1">加入</label>
-<input id="pick-1" type="checkbox"/>
-</div>
-</article>
+<a href=".html" class="item-link" aria-label="查看 梵谷線上展 詳細資訊">
+  <article class="item" data-image="images/ithem1.png"
+    data-notes="酸甜平衡的莓果香，人氣經典。"
+    data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg"
+    data-price="50" data-title="覆盆子馬卡龍">
+    
+    <div class="photo">照片</div>
+    <div class="content">
+      <div class="title">梵谷線上展</div>
+      <div class="desc">運用HTML製作美術博物館的展覽介紹，並且提供線上展讓因為疫情無法到場的人也可以體驗。</div>
+    </div>
+  </article>
+</a>
 <!-- 元素 2 -->
 <article aria-label="查看 開心果馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="濃郁堅果香與奶味。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="開心果馬卡龍" role="button" tabindex="0">
 <div class="photo">照片</div>
@@ -409,10 +411,7 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <div class="title">XXXXXX</div>
 <div class="desc">XXXXXXXXXXXX</div>
 </div>
-<div class="pick">
-<label for="pick-2">加入</label>
-<input id="pick-2" type="checkbox"/>
-</div>
+
 </article>
 <!-- 元素 3 -->
 <article aria-label="查看 檸檬馬卡龍 詳細資訊" class="item" data-image="images/Bites.png" data-notes="清爽檸檬凝乳，尾韻帶花香。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="檸檬馬卡龍" role="button" tabindex="0">
@@ -421,10 +420,7 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <div class="title">XXXXXX</div>
 <div class="desc">XXXXXXXXXXXX</div>
 </div>
-<div class="pick">
-<label for="pick-3">加入</label>
-<input id="pick-3" type="checkbox"/>
-</div>
+
 </article>
 <!-- 元素 4 -->
 <article aria-label="查看 焦糖海鹽 詳細資訊" class="item" data-image="images/Bites.png" data-notes="微鹹襯托焦糖苦甜。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="焦糖海鹽" role="button" tabindex="0">
@@ -433,10 +429,7 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <div class="title">XXXXXX</div>
 <div class="desc">XXXXXXXXXXXX</div>
 </div>
-<div class="pick">
-<label for="pick-4">加入</label>
-<input id="pick-4" type="checkbox"/>
-</div>
+
 </article>
 <!-- 元素 5 -->
 <article aria-label="查看 伯爵奶茶 詳細資訊" class="item" data-image="images/Bites.png" data-notes="佛手柑茶香融合奶香。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="伯爵奶茶" role="button" tabindex="0">
@@ -445,10 +438,7 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <div class="title">XXXXXX</div>
 <div class="desc">XXXXXXXXXXXX</div>
 </div>
-<div class="pick">
-<label for="pick-5">加入</label>
-<input id="pick-5" type="checkbox"/>
-</div>
+
 </article>
 <!-- 元素 6 -->
 <article aria-label="查看 濃巧克力 詳細資訊" class="item" data-image="images/Bites.png" data-notes="70% 可可醬夾心，厚實口感。" data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg" data-price="50" data-title="濃巧克力" role="button" tabindex="0">
