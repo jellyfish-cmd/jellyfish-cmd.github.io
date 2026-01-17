@@ -1,0 +1,72 @@
+@charset "UTF-8";
+*{
+	margin: 0;
+	padding: 0;
+}
+img {
+	width:50%;
+	margin-bottom:5%;
+	display: 300px;
+	position:static;
+	
+	
+}
+.artname{
+	display: block;
+	margin-top: 5%;
+	margin-left: 30 px;
+	font-size:24 px;
+	color:#658bb1 ;
+	position:static;
+	
+}
+.artIntroduct1{
+	display: block;
+	margin: 5%;
+	font-size:24 px;
+	min-width: 50%;
+	max-width: 100%;
+	margin: 0.5 cm;
+	color:##7f757a;
+	position:static;
+	
+	}
+.artIntroduct2{
+	
+	display: block;; /* 使用 Flexbox 排列子元素 */
+    flex-direction: row;
+	margin: 5%;
+	min-width: 200 px;
+	max-width: 1800px;
+	font-size:12 px;
+	
+}
+@media (min-width: 768px) {
+      .artIntroduct2 {
+		display: flex;
+        flex-direction: column; /* 預設為上下排列 */
+      }
+
+      img {
+		width:50%;
+		object-fit: cover;
+        float: left; /* 第二個元素左對齊 */
+      }
+
+       .artname, .artIntroduct1{
+        width:50%;
+		display: flex;		/* 讓文字元素內部也能使用 Flexbox */
+		flex-direction: column;
+		align-items: stretch;
+      }
+	  
+    }
+@media (max-width: 768px) {
+	img {
+		width:100%;
+      }
+      img, .artname, .artIntroduct1, .artIntroduct2 {
+        flex-direction: column;
+        align-items: stretch; /* 讓元素寬度填滿 */
+      }
+    }
