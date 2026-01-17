@@ -391,17 +391,23 @@ article.item:focus { outline: 2px solid var(--pink); outline-offset: 4px; border
 <main aria-label="商品列表（每個元素：照片 + 大字 + 小字 + 勾選）" class="grid">
 <!-- 範例 6 個元素，可自行複製擴充 -->
 <!-- 元素 1 -->
-<a href="history/113_1_html_midterm/index.html"  aria-label="查看 梵谷線上展 詳細資訊">
-  <article class="item" data-image="picture/monet.jpg"
-    data-notes="酸甜平衡的莓果香，人氣經典。"
-    data-nutrition="熱量: - kcal｜蛋白質: - g｜脂肪: - g｜碳水: - g｜糖: - g｜鈉: - mg"
-    data-price="50" data-title="覆盆子馬卡龍">
-    
+<a href="history/113_1_html_midterm/index.html"
+   class="item-link"
+   aria-label="查看 梵谷線上展 詳細資訊">
+
+  <article class="item"
+    data-image="picture/monet.jpg"
+    data-price="50"
+    data-title="覆盆子馬卡龍">
+
     <div class="photo">照片</div>
     <div class="content">
       <div class="title">梵谷線上展</div>
-      <div class="desc">運用HTML製作美術博物館的展覽介紹，並且提供線上展讓因為疫情無法到場的人也可以體驗。</div>
+      <div class="desc">
+        運用HTML製作美術博物館的展覽介紹，並提供線上展覽。
+      </div>
     </div>
+
   </article>
 </a>
 <!-- 元素 2 -->
