@@ -1,0 +1,99 @@
+@charset "UTF-8";
+body, h1, ul { 
+	margin: 0;
+	padding:0; 
+}
+
+* { box-sizing: cover; }
+
+ul {
+  list-style: none; 
+  padding-left: 0; 
+}
+
+a {
+  text-decoration: none;
+  color: black; /* 超連結的初始顏色 */
+  text-decoration: none; /* 選擇性移除底線 */
+}
+  a:visited {
+      color: black; /* 設定訪問後的顏色與初始顏色相同 */
+}
+
+/* NavBar */
+header {
+	background: #eeeeee;
+	box-shadow: 0px 1px 3px #00000088;
+		&::after {
+		content: "";
+    display: block;
+    clear: both;
+		}
+	h1 { /* Logo */
+    float: left;
+    padding-left: 50px;
+    line-height: 50px;
+  }
+}
+/* 隱藏 checkbox */
+input {
+  display: none;
+}
+
+/* 漢堡按鈕 */
+label {
+  float: right;
+  padding-right: 50px;
+  line-height: 50px;
+
+  img {
+    width: 45px;   
+    vertical-align: middle;
+	margin-top:5px
+  }
+}
+
+/* 選單列 */
+.menu {
+  clear: both;
+  background: #fff;
+  max-height: 0;
+  overflow: hidden;	  
+  transition: .5s;
+  li {
+    text-align: center;
+    border-bottom: 1px solid #efefef;
+    a {
+      display: block;
+      padding: 10px 0;
+      font-size: 18px;
+      color: #5d5d5d;
+      &:hover {
+        background: #5d5d5d;
+        color: #fff;
+      }
+    }
+  }
+}
+
+input:checked ~ .menu {
+  max-height: 550px;
+}
+/* 768px 以上的螢幕寬樣式 */
+@media screen and (min-width: 768px) {
+  label {
+    display: none;
+  }
+  .menu {
+    float: right;
+    clear: none;
+    max-height: 50px;
+    background: #eee;
+    li {
+      display: inline-block;
+      a {
+        padding: 0 15px;  
+      }
+    }
+  }
+}

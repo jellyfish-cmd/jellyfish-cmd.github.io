@@ -1,0 +1,30 @@
+header {
+  display: block; 
+  width: 80%;  
+  margin: 0 auto;  
+  
+}
+header > ul {
+  display: flex;
+  margin-top: 20px;
+}
+
+header > ul > li {  
+  width: 200px;  
+  margin-right: 10px;
+  padding: 10px;  
+  list-style: none;
+  border: 5px solid white;
+  border-radius: 5px;
+}
+
+header > ul > li > a {
+  display: block;
+  text-align: center;  
+  text-decoration: none;   
+  margin-left:20px;
+	margin-right:20px;
+	font-size:60 px;
+	color:white ;
+	font-family:"標楷體"
+}	

@@ -1,0 +1,57 @@
+@charset "UTF-8";
+*{
+	margin: 0;
+	padding: 0;
+}
+
+main{
+	
+	background-color:black; 
+}
+main h1{
+	text-align: center;
+	font-size:30 px;
+	color:white ;
+	font-family: "標楷體";
+}
+main h2{
+	margin-left:20px;
+	margin-right:20px;
+	font-size:24 px;
+	color:#8e44ad ;
+}
+main h3{
+	margin-left:20px;
+	margin-right:20px;
+	font-size:18 px;
+	color:#a385d6;
+}
+main .c1 p{
+	margin-left:20px;
+	margin-right:20px;
+	color:gray;
+	font-weight: bold;
+	display: block;
+    font-size: 14 px;
+}
+
+main p{
+	margin-left:20px;
+	margin-right:20px;
+	color:white;
+	font-weight: bold;
+	display: block;
+    font-size: 14 px;
+}
+
+footer{
+	
+	margin: 0px;
+	width: 100%;
+	background-color:#323530;
+	color:gray;
+	font-weight: bold;
+	display: block;
+    font-size: 14 px;
+	padding: 10px 0;
+}

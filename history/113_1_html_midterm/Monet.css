@@ -1,0 +1,50 @@
+@charset "UTF-8";
+*{	
+	background-color: black;
+	margin: 0;
+	padding: 0;
+}
+.c1{
+	
+}
+.c1 h1{
+	font-family: "標楷體", sans-serif;
+	color:rgba(232, 234, 237,0.5);
+}
+.c2{
+	background-image: url('images/Monet1021.png');
+}
+.c2 img {
+    width: 30vw;
+    height: auto;
+    border: 2px solid #000;
+}
+<html>
+<head>
+	<meta charset="UTF-8">
+	<!link rel="stylesheet" href="word.css">
+	<link rel="stylesheet" href="Monet.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>印象·莫內</title>
+    <style>
+	body{
+		background-color: black;
+		margin: 0;
+		padding: 0;
+	}
+    </style>
+</head>
+<body>
+	<div class="c1">
+		<img src="images/Monet101.jpg" style="width: 100%; height: auto; display: block; z-index: 3;">
+		<h1 style="z-index: 2; margin: -140px -140px 0px 140px; font-size:100px;">印象·莫內</h1>
+		
+        </div>
+	<div class="c2">
+		<img src="images/Monet1021.png" style="float: left; width: 60vw; z-index: 1;">
+		<img src="images/Monet102.jpg" style="float: middle; transform: rotate(5deg); width: 40vw; margin-left:150px; z-index: 2; margin-top: -300px;">
+		<img src="images/Monet1023.png" style="float: right; transform: rotate(-5deg); width: 30vw; z-index: 2; margin-top: -300px;">
+	</div>
+	
+	
+</html>
